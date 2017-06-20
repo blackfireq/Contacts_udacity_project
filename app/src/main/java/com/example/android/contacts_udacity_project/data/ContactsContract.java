@@ -10,6 +10,9 @@ public class ContactsContract {
 
     public class ContactsEntry implements BaseColumns{
 
+        private ContactsEntry(){
+        }
+
         //create constant for table name
         public static final String TABLE_NAME = "contacts";
 

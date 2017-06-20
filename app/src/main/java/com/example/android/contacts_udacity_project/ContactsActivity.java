@@ -16,13 +16,13 @@ import com.example.android.contacts_udacity_project.data.ContactsContract.Contac
 import com.example.android.contacts_udacity_project.data.ContactsDbHelper;
 
 import static android.R.attr.onClick;
+import static com.example.android.contacts_udacity_project.data.ContactsDbHelper.getAllContacts;
+import static com.example.android.contacts_udacity_project.data.ContactsDbHelper.insertDummyData;
 
 public class ContactsActivity extends AppCompatActivity {
 
     //create helper to connect to db
-    ContactsDbHelper mDbHelper;
-
-
+    private ContactsDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +32,12 @@ public class ContactsActivity extends AppCompatActivity {
         //display database rows
         displayDbInfo();
 
-
-
         //link to add button
         TextView addContact = (TextView) findViewById(R.id.dummy_contact_add);
 
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("batman"," here he goes again");
                 insertContact();
 
             }
@@ -48,21 +45,13 @@ public class ContactsActivity extends AppCompatActivity {
 
     }
 
-    private void displayDbInfo(){
 
+
+    private void displayDbInfo(){
 
         mDbHelper = new ContactsDbHelper(this);
 
-        // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
-        String[] projection = {
-                ContactsEntry._ID,
-                ContactsEntry.COLUMN_CONTACTS_NAME,
-                ContactsEntry.COLUMN_CONTACTS_NUMBER
-        };
-
-        Cursor cursor = db.query(ContactsEntry.TABLE_NAME,projection,null,null,null,null,null);
+        Cursor cursor = getAllContacts(mDbHelper);
 
         TextView contactView = (TextView) findViewById(R.id.text_view_contact);
 
@@ -102,17 +91,7 @@ public class ContactsActivity extends AppCompatActivity {
 
     public void insertContact(){
 
-        //gather info about dummy contact
-        ContentValues values = new ContentValues();
-        values.put(ContactsEntry.COLUMN_CONTACTS_NAME,"John Doe");
-        values.put(ContactsEntry.COLUMN_CONTACTS_NUMBER,"8675309");
-
-        //create db object to connect to db
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        db.insert(ContactsEntry.TABLE_NAME,null,values);
-
-
+        insertDummyData(mDbHelper);
         displayDbInfo();
     }
 
